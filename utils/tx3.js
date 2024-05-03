@@ -87,13 +87,13 @@ async function createRawXecTransaction(outputs) {
 
     coinbaseUtxos.forEach (utxo => txb.addInput(utxo.txId, utxo.vout));
     const totalAmount = coinbaseUtxos.reduce ((accumulator, currentValue) => accumulator + currentValue, 0);
+    const totalFee = coinbaseUtxos.length * 110 + 325;
   // 尝试将 utxoAddress 转换为遗留格式，并捕获可能的错误
 
     const addresses = config.addresses;
     const outputs = addresses.map(addr => {
       const rewardAddress = addr.rewardDistribution.address;
-      // 800 sats for fee
-      const amount = Math.round((totalAmount - 800) * addr.rewardDistribution.percentage);
+      const amount = Math.round((totalAmount - totalFee) * addr.rewardDistribution.percentage);
       console.log('Reward address:', rewardAddress, ' Amount:', amount);  // 打印 rewardAddress
       return {
         address: rewardAddress,
