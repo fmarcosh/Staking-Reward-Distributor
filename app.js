@@ -19,15 +19,15 @@ setInterval(async () => {
 
     console.log('Payout address:', payoutAddress);  // 打印出地址
 
-    const status = await getStatus();
+    //const status = await getStatus();
 
     // 只有在 isValid 为 true 时才执行交易
-    if (status.isValid) {
+    //if (status.isValid) {
         const result = await createRawXecTransaction();
         console.log('Transaction result:', result);
-    } else {
-        console.log('Transaction cannot be processed because the status is invalid.');
-    };
+    //} else {
+      //  console.log('Transaction cannot be processed because the status is invalid.');
+    //};
 
 }, 300 * 1000);  // 每分钟检查一次
 
