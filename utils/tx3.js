@@ -64,7 +64,7 @@ async function createRawXecTransaction(outputs) {
   
   // Filter only coinbase mature UTXOs
   const blockchaininfo = await chronik.blockchainInfo();
-  const coinbaseUtxos = utxos.filter(utxo => utxo.isCoinbase && (utxo.height+100 > blockchaininfo));
+  const coinbaseUtxos = utxos.filter(utxo => utxo.isCoinbase && (utxo.height+100 <= blockchaininfo.tipHeight));
     // 如果没有非 SLP 的 UTXO，返回
     if (coinbaseUtxos.length === 0) {
       console.log('No mature Coinbase UTXOs found for the given address');
