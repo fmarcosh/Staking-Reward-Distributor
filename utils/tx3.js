@@ -92,8 +92,8 @@ async function createRawXecTransaction(outputs) {
     const addresses = config.addresses;
     const outputs = addresses.map(addr => {
       const rewardAddress = addr.rewardDistribution.address;
-      // 450 sats for fee
-      const amount = Math.round((totalAmount - 450) * addr.rewardDistribution.percentage);
+      // 800 sats for fee
+      const amount = Math.round((totalAmount - 800) * addr.rewardDistribution.percentage);
       console.log('Reward address:', rewardAddress, ' Amount:', amount);  // 打印 rewardAddress
       return {
         address: rewardAddress,
