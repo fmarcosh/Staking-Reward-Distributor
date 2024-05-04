@@ -63,8 +63,8 @@ async function createRawXecTransaction(outputs) {
   const txb = utxolib.bitgo.createTransactionBuilderForNetwork(utxolib.networks.ecash);
   
   // Filter only coinbase mature UTXOs
-  const blockchaininfo = await chronik.blockchainInfo();
-  const coinbaseUtxos = utxos.filter(utxo => utxo.isCoinbase && (utxo.height+100 <= blockchaininfo.tipHeight));
+  const blockchainInfo = await chronik.blockchainInfo();
+  const coinbaseUtxos = utxos.filter(utxo => utxo.isCoinbase && (utxo.height+100 <= blockchainInfo.tipHeight));
     // 如果没有非 SLP 的 UTXO，返回
     if (coinbaseUtxos.length === 0) {
       console.log('No mature Coinbase UTXOs found for the given address');
@@ -86,8 +86,8 @@ async function createRawXecTransaction(outputs) {
   //txb.addInput(utxo.txId, utxo.vout);
 
     coinbaseUtxos.forEach (utxo => txb.addInput(utxo.txId, utxo.vout));
-    const totalAmount = coinbaseUtxos.reduce ((accumulator, currentValue) => accumulator + currentValue, 0);
-    const totalFee = coinbaseUtxos.length * 110 + 325;
+    const totalAmount = coinbaseUtxos.reduce ((accumulator, currentValue) => accumulator + currentValue.value, 0);
+    const totalFee = coinbaseUtxos.length * 140 + 325;
   // 尝试将 utxoAddress 转换为遗留格式，并捕获可能的错误
 
     const addresses = config.addresses;
@@ -108,7 +108,9 @@ async function createRawXecTransaction(outputs) {
   
   // 签名输入
     const hashType = utxolib.Transaction.SIGHASH_ALL | 0x40;
-    txb.sign(0, keyPair, null, hashType, utxo.value);
+    coinbaseUtxos.forEach ((utxo,index) => txb.sign(index, keyPair, null, hashType, utxo.value));
+  //  txb.sign(0, keyPair, null, hashType, totalAmount);
+  //  txb.setLockTime (0);
   // 构建交易并获取原始交易的十六进制表示形式
     const rawTxHex = txb.build().toHex();
     console.log('Raw transaction hex:', rawTxHex);
