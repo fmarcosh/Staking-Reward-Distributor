@@ -66,14 +66,14 @@ async function createRawXecTransaction(outputs) {
   const blockchainInfo = await chronik.blockchainInfo();
   const coinbaseUtxos = utxos.filter(utxo => utxo.isCoinbase && (utxo.height+100 <= blockchainInfo.tipHeight));
     // 如果没有非 SLP 的 UTXO，返回
-    if (coinbaseUtxos.length === 0) {
-      console.log('No mature Coinbase UTXOs found for the given address');
-      return;
-    };
+    //if (coinbaseUtxos.length === 0) {
+    //  console.log('No mature Coinbase UTXOs found for the given address');
+    //  return;
+    //};
 
-    // Distribute rewards for 4 or more mature coinbase UTXOs
-    if (coinbaseUtxos.length < 4) {
-      console.log('Not enough mature Coinbase UTXOs found for the given address ',coinbaseUtxos.length, '/4');
+    // Distribute rewards for 5 or more mature coinbase UTXOs
+    if (coinbaseUtxos.length < 5) {
+      console.log('Not enough mature Coinbase UTXOs found for the given address ',coinbaseUtxos.length, '/5');
       return;
     };
   
@@ -87,7 +87,7 @@ async function createRawXecTransaction(outputs) {
 
     coinbaseUtxos.forEach (utxo => txb.addInput(utxo.txId, utxo.vout));
     const totalAmount = coinbaseUtxos.reduce ((accumulator, currentValue) => accumulator + currentValue.value, 0);
-    const totalFee = coinbaseUtxos.length * 140 + 325;
+    const totalFee = coinbaseUtxos.length * 145 + 300;
   // 尝试将 utxoAddress 转换为遗留格式，并捕获可能的错误
 
     const addresses = config.addresses;
